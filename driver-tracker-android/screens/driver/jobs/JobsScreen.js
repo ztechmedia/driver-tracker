@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, connect } from "react-redux";
+import { Alert } from "react-native";
 import {
   View,
   StyleSheet,
@@ -12,7 +13,11 @@ import {
 import { Container, Tab, Tabs, Content } from "native-base";
 import DateTimePicker from "@react-native-community/datetimepicker";
 //actions
-import { getJobs, getJobsToday } from "../../../store/actions/jobs";
+import {
+  getJobs,
+  getJobsToday,
+  jobsSendPackage,
+} from "../../../store/actions/jobs";
 //constants
 import Colors from "../../../constants/Colors";
 import Fonts from "../../../constants/Fonts";
@@ -21,11 +26,11 @@ import JobList from "../../../components/JobList";
 import GeneralStatusBarColor from "../../../components/UI/statusbar/GeneralStatusBarColor";
 import Text from "../../../components/UI/BodyText";
 
-const JobsScreen = () => {
+const JobsScreen = ({ jobs }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userLogged);
   const loading = useSelector((state) => state.jobs.loading);
-  const jobs = useSelector((state) => state.jobs.jobs);
+  const loading1 = useSelector((state) => state.jobs.loading1);
   const jobsToday = useSelector((state) => state.jobs.jobsToday);
   const [tabPostion, setTabPosition] = useState("daily");
   const [date, setDate] = useState(new Date("2016-09-13"));
@@ -58,6 +63,20 @@ const JobsScreen = () => {
     }
   }, [dispatch]);
 
+  const onStartOrderHandler = (id) => {
+    Alert.alert(
+      "Mulai Pengiriman",
+      "Apakah anda yakin akan memulai pengiriman ?",
+      [
+        {
+          text: "Batal",
+          style: "cancel",
+        },
+        { text: "Mulai", onPress: () => dispatch(jobsSendPackage(id)) },
+      ]
+    );
+  };
+
   useEffect(() => {
     onFetchJobsDay();
   }, [onFetchJobsDay]);
@@ -71,7 +90,13 @@ const JobsScreen = () => {
           data={jobs}
           keyExtractor={(item) => item.ID + "awb1"}
           key="awb1"
-          renderItem={(itemData) => <JobList awb={itemData.item} />}
+          renderItem={(itemData) => (
+            <JobList
+              loading={loading1}
+              onStartOrder={onStartOrderHandler}
+              awb={itemData.item}
+            />
+          )}
         />
       </View>
     ) : (
@@ -94,7 +119,13 @@ const JobsScreen = () => {
           data={jobsToday}
           keyExtractor={(item) => item.ID + "awb2"}
           key="awb2"
-          renderItem={(itemData) => <JobList awb={itemData.item} />}
+          renderItem={(itemData) => (
+            <JobList
+              loading={loading1}
+              onStartOrder={onStartOrderHandler}
+              awb={itemData.item}
+            />
+          )}
         />
       </View>
     ) : (
@@ -136,7 +167,7 @@ const JobsScreen = () => {
                 activeTextStyle={styles.textStyleActive}
                 activeTabStyle={styles.tabStyleActive}
                 tabStyle={styles.tabStyle}
-                heading="Harian"
+                heading="Baru"
               >
                 {loading ? (
                   <View style={styles.tabBodyContainer}>
@@ -153,7 +184,7 @@ const JobsScreen = () => {
                 activeTextStyle={styles.textStyleActive}
                 activeTabStyle={styles.tabStyleActive}
                 tabStyle={styles.tabStyle}
-                heading="Bulananan"
+                heading="Pengiriman Ulang"
               >
                 {loading ? (
                   <View style={styles.tabBodyContainer}>
@@ -261,4 +292,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default JobsScreen;
+const mapStateToProps = (state) => {
+  return {
+    jobs: state.jobs.jobs,
+  };
+};
+export default connect(mapStateToProps)(JobsScreen);

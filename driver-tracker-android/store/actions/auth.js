@@ -41,7 +41,7 @@ export const login = (phone, password) => async (dispatch) => {
     const expirationDate = new Date(
       new Date().getTime() + request.data.expiresIn * 1000
     );
-    await saveDataToStorage("@userData", {
+    await saveDataToStorage("userData", {
       token: request.data.token,
       expirationDate: expirationDate,
       userLogged: request.data.user,

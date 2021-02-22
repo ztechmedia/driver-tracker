@@ -9,10 +9,12 @@ const composeEnhancers =
 //reducer
 import authReducer from "./reducers/auth";
 import jobsReducer from "./reducers/jobs";
+import activeJobsReducer from "./reducers/active-jobs";
 
 const rootReducers = combineReducers({
   auth: authReducer,
   jobs: jobsReducer,
+  activeJobs: activeJobsReducer,
 });
 
 const store = createStore(

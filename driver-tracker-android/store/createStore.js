@@ -10,11 +10,13 @@ const composeEnhancers =
 import authReducer from "./reducers/auth";
 import jobsReducer from "./reducers/jobs";
 import activeJobsReducer from "./reducers/active-jobs";
+import historyJobsReducer from "./reducers/history-jobs";
 
 const rootReducers = combineReducers({
   auth: authReducer,
   jobs: jobsReducer,
   activeJobs: activeJobsReducer,
+  historyJobs: historyJobsReducer,
 });
 
 const store = createStore(

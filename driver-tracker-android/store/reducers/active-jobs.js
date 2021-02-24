@@ -69,7 +69,10 @@ const setJobSendSuccess = (state, action) => {
 
   const jobs = [...state.activeJobs];
 
-  if (action.job.AWB_Status === "CANCELED") {
+  if (
+    action.job.AWB_Status === "CANCELED" ||
+    action.job.AWB_Status === "FAILED DELIVERY"
+  ) {
     jobs.splice(jobIndex, 1);
   } else {
     jobs[jobIndex].AWB_Status = action.job.AWB_Status;

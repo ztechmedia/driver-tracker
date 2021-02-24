@@ -19,12 +19,14 @@ const JobList = (props) => {
     AWB_Date,
   } = props.awb;
 
-  const { onStartOrder, loading } = props;
+  const { onStartOrder, loading, idleText } = props;
 
   if (
     AWB_Status === "PROCESSED" ||
     AWB_Status === "PROCESSED2" ||
-    AWB_Status === "ATTEMP DELIVERY"
+    AWB_Status === "ATTEMP DELIVERY" ||
+    AWB_Status === "FAILED DELIVERY" ||
+    AWB_Status === "CANCELED"
   ) {
     btn = "start";
   } else {
@@ -64,7 +66,7 @@ const JobList = (props) => {
                   {loading ? (
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
-                    "Mulai Pengiriman"
+                    idleText
                   )}
                 </Text>
               </Button>

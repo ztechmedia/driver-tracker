@@ -1,9 +1,10 @@
 import {
   JOBS_START,
   JOBS_FAIL,
-  JOBS_SUCCESS,
+  JOBS_ATTEMP_SUCCESS,
   JOBS_TODAY_SUCCESS,
-  JOBS_SEND_SUCCESS,
+  JOBS_TODAY_SEND_SUCCESS,
+  JOBS_ATTEMP_SEND_SUCCESS,
   JOBS_SEND_START,
 } from "../actions/jobs";
 
@@ -12,70 +13,51 @@ import { updateObject } from "../../utils/utility";
 const initialState = {
   loading: false,
   loading1: false,
-  jobs: [],
+  jobsAttemp: [],
   jobsToday: [],
-  job: null,
   error: null,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case JOBS_START:
-      return setLoading(state, action);
+      return updateObject(state, {
+        loading: true,
+        error: null,
+      });
     case JOBS_SEND_START:
-      return setSendLoading(state, action);
+      return updateObject(state, {
+        loading1: true,
+        error: null,
+      });
     case JOBS_FAIL:
-      return setError(state, action);
-    case JOBS_SUCCESS:
-      return setJobsSuccess(state, action);
-    case JOBS_SEND_SUCCESS:
-      return setJobSendSuccess(state, action);
+      return updateObject(state, {
+        loading: false,
+        loading1: false,
+        error: action.error,
+      });
+    case JOBS_ATTEMP_SUCCESS:
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        jobsAttemp: action.jobs,
+      });
     case JOBS_TODAY_SUCCESS:
-      return setJobsTodaySuccess(state, action);
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        jobsToday: action.jobs,
+      });
+    case JOBS_TODAY_SEND_SUCCESS:
+      return setJobTodaySendSuccess(state, action);
+    case JOBS_ATTEMP_SEND_SUCCESS:
+      return setJobAttempSendSuccess(state, action);
     default:
       return state;
   }
 };
 
-const setLoading = (state, action) => {
-  return updateObject(state, {
-    loading: true,
-    error: null,
-  });
-};
-
-const setSendLoading = (state, action) => {
-  return updateObject(state, {
-    loading1: true,
-    error: null,
-  });
-};
-
-const setError = (state, action) => {
-  return updateObject(state, {
-    loading: false,
-    loading1: false,
-    error: action.error,
-  });
-};
-
-const setJobsSuccess = (state, action) => {
-  return updateObject(state, {
-    loading: false,
-    error: null,
-    jobs: action.jobs,
-  });
-};
-
-const setJobsTodaySuccess = (state, action) => {
-  return updateObject(state, {
-    loading: false,
-    error: null,
-    jobsToday: action.jobs,
-  });
-};
-
-const setJobSendSuccess = (state, action) => {
+const setJobTodaySendSuccess = (state, action) => {
   const jobIndex = state.jobsToday
     .map((job) => job.ID === action.job.ID)
     .indexOf(true);
@@ -87,6 +69,21 @@ const setJobSendSuccess = (state, action) => {
     loading1: false,
     error: null,
     jobsToday: jobs,
+  });
+};
+
+const setJobAttempSendSuccess = (state, action) => {
+  const jobIndex = state.jobsAttemp
+    .map((job) => job.ID === action.job.ID)
+    .indexOf(true);
+
+  const jobs = [...state.jobsAttemp];
+  jobs.splice(jobIndex, 1);
+
+  return updateObject(state, {
+    loading1: false,
+    error: null,
+    jobsAttemp: jobs,
   });
 };
 

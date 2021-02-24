@@ -9,9 +9,9 @@ import { Ionicons } from "@expo/vector-icons";
 import StartupScreen from "../screens/StartupScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
-import JobsScreen from "../screens/driver/jobs/JobsScreen";
-import ActiveJobScreen from "../screens/driver/job/ActiveJobScreen";
-import AccountScreen from "../screens/driver/account/AccountScreen";
+import JobsScreen from "../screens/driver/JobsScreen";
+import ActiveJobScreen from "../screens/driver/ActiveJobScreen";
+import AccountScreen from "../screens/driver/AccountScreen";
 
 //load constants
 import Colors from "../constants/Colors";

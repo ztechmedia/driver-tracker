@@ -65,7 +65,6 @@ let monthObject = [
 ];
 
 const DatePicker = (props) => {
-  const { day, month, year, onChangeDate, onChangeMonth, onChangeYear } = props;
   return (
     <View
       style={{
@@ -77,49 +76,55 @@ const DatePicker = (props) => {
         flexDirection: "row",
       }}
     >
-      <Picker
-        mode="dropdown"
-        iosIcon={<Icon name="arrow-down" />}
-        placeholder="Tanggal"
-        placeholderStyle={{ color: "#bfc6ea" }}
-        placeholderIconColor="#007aff"
-        style={{
-          width: "25%",
-          height: "100%",
-          borderWidth: 1,
-          borderColor: "#ccc",
-        }}
-        selectedValue={day + ""}
-        onValueChange={onChangeDate}
-      >
-        {days}
-      </Picker>
-      <Picker
-        mode="dropdown"
-        iosIcon={<Icon name="arrow-down" />}
-        placeholder="Tanggal"
-        placeholderStyle={{ color: "#bfc6ea" }}
-        placeholderIconColor="#007aff"
-        style={{ width: "45%", height: "100%" }}
-        selectedValue={month}
-        onValueChange={onChangeMonth}
-      >
-        {monthObject.map((month) => (
-          <Picker.Item label={month.name} value={month.value} />
-        ))}
-      </Picker>
-      <Picker
-        mode="dropdown"
-        iosIcon={<Icon name="arrow-down" />}
-        placeholder="Tanggal"
-        placeholderStyle={{ color: "#bfc6ea" }}
-        placeholderIconColor="#007aff"
-        style={{ width: "30%", height: "100%" }}
-        selectedValue={year + ""}
-        onValueChange={onChangeYear}
-      >
-        {years}
-      </Picker>
+      {props.day && (
+        <Picker
+          mode="dropdown"
+          iosIcon={<Icon name="arrow-down" />}
+          placeholder="Tanggal"
+          placeholderStyle={{ color: "#bfc6ea" }}
+          placeholderIconColor="#007aff"
+          style={{
+            width: `${props.config.day.width}`,
+            height: "100%",
+          }}
+          selectedValue={props.day + ""}
+          onValueChange={props.onChangeDate}
+        >
+          {days}
+        </Picker>
+      )}
+
+      {props.month && (
+        <Picker
+          mode="dropdown"
+          iosIcon={<Icon name="arrow-down" />}
+          placeholder="Tanggal"
+          placeholderStyle={{ color: "#bfc6ea" }}
+          placeholderIconColor="#007aff"
+          style={{ width: `${props.config.month.width}`, height: "100%" }}
+          selectedValue={props.month}
+          onValueChange={props.onChangeMonth}
+        >
+          {monthObject.map((month) => (
+            <Picker.Item label={month.name} value={month.value} />
+          ))}
+        </Picker>
+      )}
+
+      {props.year && (
+        <Picker
+          mode="dropdown"
+          iosIcon={<Icon name="arrow-down" />}
+          placeholder="Tanggal"
+          placeholderStyle={{ color: "#bfc6ea" }}
+          placeholderIconColor="#007aff"
+          style={{ width: `${props.config.year.width}`, height: "100%" }}
+          selectedValue={props.year + ""}
+          onValueChange={props.onChangeYear}
+        >
+          {years}
+        </Picker>
+      )}
     </View>
   );
 };

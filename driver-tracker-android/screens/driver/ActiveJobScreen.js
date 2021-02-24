@@ -28,17 +28,17 @@ import {
 } from "react-navigation-header-buttons";
 import { Table, TableWrapper, Rows, Col } from "react-native-table-component";
 //constants
-import Colors from "../../../constants/Colors";
+import Colors from "../../constants/Colors";
 //components
-import HeaderButton from "../../../components/UI/HeaderButton";
-import Text from "../../../components/UI/BodyText";
-import DatePicker from "../../../components/DatePicker";
+import HeaderButton from "../../components/UI/HeaderButton";
+import Text from "../../components/UI/BodyText";
+import DatePicker from "../../components/DatePicker";
 //actios
 import {
   getActiveJobs,
   jobActiveSendStatus,
-} from "../../../store/actions/active-jobs";
-import Fonts from "../../../constants/Fonts";
+} from "../../store/actions/active-jobs";
+import Fonts from "../../constants/Fonts";
 
 const height = Dimensions.get("window").height;
 
@@ -265,6 +265,17 @@ const ActiveJobScreen = (props) => {
             onChangeDate={onChangeDateHandler}
             onChangeMonth={onChangeMonthHandler}
             onChangeYear={onChangeYearHandler}
+            config={{
+              day: {
+                width: "25%",
+              },
+              month: {
+                width: "45%",
+              },
+              year: {
+                width: "30%",
+              },
+            }}
           />
         </View>
 

@@ -19,6 +19,9 @@ Route::group([
     Route::post('jobs-attemp', 'Api\JobsController@getAttempJobs');
     Route::post('jobs-today', 'Api\JobsController@getJobsToday');
     Route::post('jobs-active', 'Api\JobsController@getJobsActive');
+    Route::post('jobs-failed', 'Api\JobsController@getFailedJobs');
+    Route::post('jobs-canceled', 'Api\JobsController@getCanceledJobs');
     Route::post('job-send-status', 'Api\JobsController@setJobStatus');
+    Route::post('job-send-status-activation', 'Api\JobsController@setJobStatusActivation');
 });
 

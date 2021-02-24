@@ -4,9 +4,10 @@ import errorHandler from "../../utils/errorHandler";
 export const JOBS_START = "JOBS_START";
 export const JOBS_SEND_START = "JOBS_SEND_START";
 export const JOBS_FAIL = "JOBS_FAIL";
-export const JOBS_SUCCESS = "JOBS_SUCCESS";
+export const JOBS_ATTEMP_SUCCESS = "JOBS_ATTEMP_SUCCESS";
 export const JOBS_TODAY_SUCCESS = "JOBS_TODAY_SUCCESS";
-export const JOBS_SEND_SUCCESS = "JOBS_SEND_SUCCESS";
+export const JOBS_TODAY_SEND_SUCCESS = "JOBS_TODAY_SEND_SUCCESS";
+export const JOBS_ATTEMP_SEND_SUCCESS = "JOBS_ATTEMP_SEND_SUCCESS";
 
 const config = {
   headers: {
@@ -14,13 +15,13 @@ const config = {
   },
 };
 
-export const getJobs = (rider, date) => async (dispatch) => {
+export const getJobsAttemp = (rider, date) => async (dispatch) => {
   const data = { rider, date };
 
   try {
     dispatch(jobsStart());
     const request = await axios.post("/api/v1/jobs-attemp", data, config);
-    dispatch(jobsSuccess(request.data.jobs));
+    dispatch(jobsAttempSuccess(request.data.jobs));
   } catch (err) {
     dispatch(jobsFail(err.response.data.error));
     dispatch(errorHandler(err.response.data.error));
@@ -40,16 +41,28 @@ export const getJobsToday = (rider, date) => async (dispatch) => {
   }
 };
 
-export const jobSendStatus = (id, status) => async (dispatch) => {
+export const jobSendStatus = (id, status, job, date = null) => async (
+  dispatch
+) => {
   const data = {
     id,
     status,
+    date,
   };
 
   try {
     dispatch(jobSendStart());
-    const request = await axios.post("/api/v1/job-send-status", data, config);
-    dispatch(jobSendSuccess(request.data.awb));
+    if (job === "today") {
+      const request = await axios.post("/api/v1/job-send-status", data, config);
+      dispatch({ type: JOBS_TODAY_SEND_SUCCESS, job: request.data.awb });
+    } else {
+      const request = await axios.post(
+        "/api/v1/job-send-status-activation",
+        data,
+        config
+      );
+      dispatch({ type: JOBS_ATTEMP_SEND_SUCCESS, job: request.data.awb });
+    }
   } catch (err) {
     dispatch(jobsFail(err.response.data.error));
     dispatch(errorHandler(err.response.data.error));
@@ -68,13 +81,6 @@ const jobSendStart = () => (dispatch) => {
   });
 };
 
-const jobSendSuccess = (job) => (dispatch) => {
-  dispatch({
-    type: JOBS_SEND_SUCCESS,
-    job,
-  });
-};
-
 const jobsFail = (error) => (dispatch) => {
   dispatch({
     type: JOBS_FAIL,
@@ -82,9 +88,9 @@ const jobsFail = (error) => (dispatch) => {
   });
 };
 
-const jobsSuccess = (jobs) => (dispatch) => {
+const jobsAttempSuccess = (jobs) => (dispatch) => {
   dispatch({
-    type: JOBS_SUCCESS,
+    type: JOBS_ATTEMP_SUCCESS,
     jobs,
   });
 };

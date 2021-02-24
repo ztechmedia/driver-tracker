@@ -12,26 +12,26 @@ import {
 import { Container, Tab, Tabs, Content } from "native-base";
 //actions
 import {
-  getJobs,
+  getJobsAttemp,
   getJobsToday,
   jobSendStatus,
-} from "../../../store/actions/jobs";
+} from "../../store/actions/jobs";
 //constants
-import Colors from "../../../constants/Colors";
-import Fonts from "../../../constants/Fonts";
+import Colors from "../../constants/Colors";
+import Fonts from "../../constants/Fonts";
 //components
-import JobList from "../../../components/JobList";
-import GeneralStatusBarColor from "../../../components/UI/statusbar/GeneralStatusBarColor";
-import Text from "../../../components/UI/BodyText";
-import DatePicker from "../../../components/DatePicker";
+import JobList from "../../components/JobList";
+import GeneralStatusBarColor from "../../components/UI/statusbar/GeneralStatusBarColor";
+import Text from "../../components/UI/BodyText";
+import DatePicker from "../../components/DatePicker";
 
-const JobsScreen = (props) => {
+const JobsScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userLogged);
   const loading = useSelector((state) => state.jobs.loading);
   const loading1 = useSelector((state) => state.jobs.loading1);
   const jobsToday = useSelector((state) => state.jobs.jobsToday);
-  const jobs = useSelector((state) => state.jobs.jobs);
+  const jobsAttemp = useSelector((state) => state.jobs.jobsAttemp);
   const [tabPostion, setTabPosition] = useState("daily");
   const [day, setDay] = useState(new Date("2016-09-13").getDate());
   const [month, setMonth] = useState(new Date("2016-09-13").getMonth() + 1);
@@ -46,7 +46,7 @@ const JobsScreen = (props) => {
     setMonth(value);
     onFetchJobsDay();
     if (value !== month) {
-      onFetchJobsMonth();
+      onFetchJobsAttemp();
     }
   };
 
@@ -57,8 +57,8 @@ const JobsScreen = (props) => {
 
   const onChangeTabHandler = () => {
     if (tabPostion === "daily") {
-      setTabPosition("monthly");
-      onFetchJobsMonth();
+      setTabPosition("attemp");
+      onFetchJobsAttemp();
     }
   };
 
@@ -69,14 +69,16 @@ const JobsScreen = (props) => {
     }
   }, [dispatch, year, month, day]);
 
-  const onFetchJobsMonth = useCallback(() => {
+  const onFetchJobsAttemp = useCallback(() => {
     if (user) {
       const date = `${year}-${month}-${day}`;
-      dispatch(getJobs(user.Rider_Name, date));
+      dispatch(getJobsAttemp(user.Rider_Name, date));
     }
   }, [dispatch, year, month, day]);
 
   const onStartOrderHandler = (id) => {
+    const job = tabPostion === "daily" ? "today" : "attemp";
+    const date = job === "attemp" ? `${year}-${month}-${day}` : null;
     Alert.alert(
       "Mulai Pengiriman",
       "Apakah anda yakin akan memulai pengiriman ?",
@@ -87,7 +89,7 @@ const JobsScreen = (props) => {
         },
         {
           text: "Mulai",
-          onPress: () => dispatch(jobSendStatus(id, "DELIVERY")),
+          onPress: () => dispatch(jobSendStatus(id, "DELIVERY", job, date)),
         },
       ]
     );
@@ -99,17 +101,18 @@ const JobsScreen = (props) => {
     }
   }, [onFetchJobsDay]);
 
-  let jobsList =
-    jobs.length > 0 && !loading ? (
+  let jobsAttempList =
+    jobsAttemp.length > 0 && !loading ? (
       <View style={styles.tabBodyContainer}>
         <FlatList
-          onRefresh={onFetchJobsMonth}
+          onRefresh={onFetchJobsAttemp}
           refreshing={loading}
-          data={jobs}
+          data={jobsAttemp}
           keyExtractor={(item) => item.ID + "awb1"}
           key="awb1"
           renderItem={(itemData) => (
             <JobList
+              idleText="Mulai Pengiriman"
               loading={loading1}
               onStartOrder={onStartOrderHandler}
               awb={itemData.item}
@@ -121,7 +124,7 @@ const JobsScreen = (props) => {
       <ScrollView
         contentContainerStyle={styles.centered}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={onFetchJobsMonth} />
+          <RefreshControl refreshing={loading} onRefresh={onFetchJobsAttemp} />
         }
       >
         <Text>
@@ -141,6 +144,7 @@ const JobsScreen = (props) => {
           key="awb2"
           renderItem={(itemData) => (
             <JobList
+              idleText="Mulai Pengiriman"
               loading={loading1}
               onStartOrder={onStartOrderHandler}
               awb={itemData.item}
@@ -181,6 +185,17 @@ const JobsScreen = (props) => {
             onChangeDate={onChangeDateHandler}
             onCHangeMonth={onChangeMonthHandler}
             onChangeYear={onChangeYearHandler}
+            config={{
+              day: {
+                width: "25%",
+              },
+              month: {
+                width: "45%",
+              },
+              year: {
+                width: "30%",
+              },
+            }}
           />
           <View style={styles.tabContainer}>
             <Tabs
@@ -218,7 +233,7 @@ const JobsScreen = (props) => {
                     </View>
                   </View>
                 ) : (
-                  jobsList
+                  jobsAttempList
                 )}
               </Tab>
             </Tabs>

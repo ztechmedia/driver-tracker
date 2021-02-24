@@ -61,7 +61,7 @@ export const activateJob = (id, status, job) => async (dispatch) => {
         type: HISTORY_JOBS_FAILED_SEND_SUCCESS,
         job: request.data.awb,
       });
-    } else {
+    } else if (job === "canceled") {
       dispatch({
         type: HISTORY_JOBS_CANCELED_SEND_SUCCESS,
         job: request.data.awb,

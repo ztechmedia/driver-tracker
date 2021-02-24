@@ -64,6 +64,8 @@ const AccountScreen = () => {
     if (tabJobPostion === "failed") {
       setTabJobPosition("canceled");
       onFetchJobsCanceledHandler();
+    } else {
+      setTabPosition("canceled");
     }
   };
 

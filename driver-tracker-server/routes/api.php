@@ -16,7 +16,9 @@ Route::group([
 Route::group([
     'prefix' => 'v1'
 ], function ($router) {
-    Route::post('jobs', 'Api\JobsController@getJobs');
+    Route::post('jobs-attemp', 'Api\JobsController@getAttempJobs');
     Route::post('jobs-today', 'Api\JobsController@getJobsToday');
+    Route::post('jobs-active', 'Api\JobsController@getJobsActive');
+    Route::post('job-send-status', 'Api\JobsController@setJobStatus');
 });
 

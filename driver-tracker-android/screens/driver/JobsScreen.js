@@ -59,6 +59,8 @@ const JobsScreen = () => {
     if (tabPostion === "daily") {
       setTabPosition("attemp");
       onFetchJobsAttemp();
+    } else {
+      setTabPosition("daily");
     }
   };
 

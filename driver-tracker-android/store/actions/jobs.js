@@ -55,7 +55,7 @@ export const jobSendStatus = (id, status, job, date = null) => async (
     if (job === "today") {
       const request = await axios.post("/api/v1/job-send-status", data, config);
       dispatch({ type: JOBS_TODAY_SEND_SUCCESS, job: request.data.awb });
-    } else {
+    } else if (job === "attemp") {
       const request = await axios.post(
         "/api/v1/job-send-status-activation",
         data,

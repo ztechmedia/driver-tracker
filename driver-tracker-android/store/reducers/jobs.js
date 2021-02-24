@@ -58,32 +58,32 @@ const reducer = (state = initialState, action) => {
 };
 
 const setJobTodaySendSuccess = (state, action) => {
-  const jobIndex = state.jobsToday
-    .map((job) => job.ID === action.job.ID)
-    .indexOf(true);
+  const jobTodayIndex = state.jobsToday
+    .map((job) => job.ID)
+    .indexOf(action.job.ID);
 
-  const jobs = [...state.jobsToday];
-  jobs[jobIndex].AWB_Status = action.job.AWB_Status;
+  const jobsToday = [...state.jobsToday];
+  jobsToday[jobTodayIndex].AWB_Status = action.job.AWB_Status;
 
   return updateObject(state, {
     loading1: false,
     error: null,
-    jobsToday: jobs,
+    jobsToday: jobsToday,
   });
 };
 
 const setJobAttempSendSuccess = (state, action) => {
-  const jobIndex = state.jobsAttemp
-    .map((job) => job.ID === action.job.ID)
-    .indexOf(true);
+  const jobAttempIndex = state.jobsAttemp
+    .map((job) => job.ID)
+    .indexOf(action.job.ID);
 
-  const jobs = [...state.jobsAttemp];
-  jobs.splice(jobIndex, 1);
+  const jobsAttemp = [...state.jobsAttemp];
+  jobsAttemp.splice(jobAttempIndex, 1);
 
   return updateObject(state, {
     loading1: false,
     error: null,
-    jobsAttemp: jobs,
+    jobsAttemp: jobsAttemp,
   });
 };
 

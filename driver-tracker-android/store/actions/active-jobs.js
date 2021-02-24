@@ -18,7 +18,6 @@ export const getActiveJobs = (rider, date) => async (dispatch) => {
   try {
     dispatch(activeJobsStart());
     const request = await axios.post("/api/v1/jobs-active", data, config);
-    console.log(request.data.jobs);
     dispatch(activeJobsSuccess(request.data.jobs));
   } catch (err) {
     dispatch(activeJobsFail(err.response.data.error));

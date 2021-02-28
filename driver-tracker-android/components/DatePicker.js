@@ -6,11 +6,11 @@ const days = [];
 const years = [];
 
 for (let i = 1; i <= 31; i++) {
-  days.push(<Picker.Item label={i + ""} value={i + ""} />);
+  days.push(<Picker.Item label={i + ""} value={i + ""} key={i + "day"} />);
 }
 
 for (let i = 2010; i <= 20199; i++) {
-  years.push(<Picker.Item label={i + ""} value={i + ""} />);
+  years.push(<Picker.Item label={i + ""} value={i + ""} key={i + "year"} />);
 }
 
 let monthObject = [
@@ -106,7 +106,11 @@ const DatePicker = (props) => {
           onValueChange={props.onChangeMonth}
         >
           {monthObject.map((month) => (
-            <Picker.Item label={month.name} value={month.value} />
+            <Picker.Item
+              label={month.name}
+              value={month.value}
+              key={month.name}
+            />
           ))}
         </Picker>
       )}

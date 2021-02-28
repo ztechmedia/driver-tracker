@@ -11,6 +11,7 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 import JobsScreen from "../screens/driver/JobsScreen";
 import ActiveJobScreen from "../screens/driver/ActiveJobScreen";
+import UploadDocumentScreen from "../screens/driver/UploadDocumentScreen";
 import AccountScreen from "../screens/driver/AccountScreen";
 
 //load constants
@@ -52,6 +53,7 @@ const DriverTrackerNavigator = createStackNavigator(
 const ActiveDriverTrackerNavigator = createStackNavigator(
   {
     ActiveJobScreen: ActiveJobScreen,
+    UploadDocumentScreen: UploadDocumentScreen,
   },
   {
     defaultNavigationOptions: defaultNavOptions,

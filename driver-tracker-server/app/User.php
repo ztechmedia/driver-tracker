@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements JWTSubject
 {
+    protected $connection = 'mysql';
+    
     use Notifiable;
 
     protected $fillable = [

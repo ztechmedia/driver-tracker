@@ -94,7 +94,7 @@ const ActiveJobScreen = (props) => {
   useEffect(() => {
     if (year && month && day) {
       onGetActiveJobsHandler();
-      // navigation.setParams({ getActiveJobs: onGetActiveJobsHandler });
+      navigation.setParams({ getActiveJobs: onGetActiveJobsHandler });
     }
   }, [onGetActiveJobsHandler]);
 
@@ -202,26 +202,53 @@ const ActiveJobScreen = (props) => {
                 </List>
               </ScrollView>
               <View style={{ marginBottom: 15, paddingHorizontal: 20 }}>
-                <Button
-                  full
-                  rounded
-                  style={{
-                    backgroundColor: "#fff",
-                    borderWidth: 1,
-                    borderColor: "#ccc",
-                  }}
-                  onPress={() => onChangeAwbId(job.ID)}
-                >
-                  <Text
+                {job.AWB_Status === "RECEIVED" ? (
+                  <Button
+                    full
+                    rounded
                     style={{
-                      color: Colors.primary,
-                      textTransform: "uppercase",
-                      fontWeight: "bold",
+                      backgroundColor: "orange",
+                      borderWidth: 1,
+                      borderColor: "#ccc",
                     }}
+                    onPress={() =>
+                      navigation.navigate("UploadDocumentScreen", {
+                        awbId: job.ID,
+                      })
+                    }
                   >
-                    {loading1 ? "Updating..." : "Update Status"}
-                  </Text>
-                </Button>
+                    <Text
+                      style={{
+                        color: "#fff",
+                        textTransform: "uppercase",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Upload Dokumen
+                    </Text>
+                  </Button>
+                ) : (
+                  <Button
+                    full
+                    rounded
+                    style={{
+                      backgroundColor: "#fff",
+                      borderWidth: 1,
+                      borderColor: "#ccc",
+                    }}
+                    onPress={() => onChangeAwbId(job.ID)}
+                  >
+                    <Text
+                      style={{
+                        color: Colors.primary,
+                        textTransform: "uppercase",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {loading1 ? "Updating..." : "Update Status"}
+                    </Text>
+                  </Button>
+                )}
               </View>
             </Tab>
           );
@@ -329,19 +356,6 @@ const ActiveJobScreen = (props) => {
                   </Left>
                   <Body>
                     <Text>RECEIVED</Text>
-                  </Body>
-                </ListItem>
-                <ListItem
-                  icon
-                  onPress={() => onChangeStatusHandler("DOCUMENT RECEIVED")}
-                >
-                  <Left>
-                    <Button style={{ backgroundColor: Colors.primary }}>
-                      <Icon active name="document-text-outline" />
-                    </Button>
-                  </Left>
-                  <Body>
-                    <Text>DOCUMENT RECEIVED</Text>
                   </Body>
                 </ListItem>
                 <ListItem

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Awb;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AwbResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\AwbResource;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class JobsController extends Controller
 {
@@ -49,7 +50,7 @@ class JobsController extends Controller
     {
         $date = date('Y-m-d', strtotime($request->date));
         $jobs = Awb::where('Rider', $request->rider)
-            ->whereIn('AWB_Status', ["DELIVERY", "RECEIVED", "DOCUMENT RECEIVED"])
+            ->whereIn('AWB_Status', ["DELIVERY", "RECEIVED"])
             ->where('AWB_Date', $date)
             ->get();
         $awb = count($jobs) > 0 ? AwbResource::collection($jobs) : [];
@@ -104,20 +105,42 @@ class JobsController extends Controller
         return response()->json(["awb" => new AwbResource($awb)]);
     }
 
-        //set status from attemp to delivery
-        public function setJobStatusActivation(Request $request)
-        {
-            $awb = Awb::where("ID", $request->id)->first();
+    //set status from attemp to delivery
+    public function setJobStatusActivation(Request $request)
+    {
+        $awb = Awb::where("ID", $request->id)->first();
+
+        if(!$awb) {
+            return response()->json(["error" => "AWB ID tidak ditemukan"]);
+        }
+
+        $awb->timestamps = false;
+        $awb->AWB_Status = $request->status;
+        $awb->AWB_Date = $request->date;
+        $awb->update();
+
+        return response()->json(["awb" => new AwbResource($awb)]);
+    }
     
-            if(!$awb) {
-                return response()->json(["error" => "AWB ID tidak ditemukan"]);
+    //upload photo
+    public function uploadDocument(Request $request)
+    {
+        if($request->hasFile('photo')) {
+            if($request->file('photo')->isValid()) {
+                $validated = $request->validate([
+                    'awbId' => 'string|max:100',
+                    'photo' => 'mimes:jpeg,png,jpg|max:1014',
+                ]); 
+                $extension = $request->photo->extension();
+                $request->photo->move(public_path('document'), $validated['awbId'].".".$extension);
+                $awb = Awb::where(['ID' => $request->awbId])->first();
+                $awb->timestamps = false;
+                $awb->AWB_Img = $validated['awbId'].".".$extension;
+                $awb->AWB_Status = "DOCUMENT RECEIVED";
+                $awb->update();
             }
-    
-            $awb->timestamps = false;
-            $awb->AWB_Status = $request->status;
-            $awb->AWB_Date = $request->date;
-            $awb->update();
-    
+
             return response()->json(["awb" => new AwbResource($awb)]);
         }
+    }
 }

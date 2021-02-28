@@ -185,7 +185,7 @@ const JobsScreen = () => {
             month={month}
             year={year}
             onChangeDate={onChangeDateHandler}
-            onCHangeMonth={onChangeMonthHandler}
+            onChangeMonth={onChangeMonthHandler}
             onChangeYear={onChangeYearHandler}
             config={{
               day: {

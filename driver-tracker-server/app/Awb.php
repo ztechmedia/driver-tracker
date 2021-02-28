@@ -11,5 +11,6 @@ class Awb extends Model
     protected $primaryKey = "ID";
     protected $fillable = [
         'AWB_Status',
+        "AWB_Img"
     ];
 }

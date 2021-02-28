@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Alert, Image } from "react-native";
 import { Button } from "native-base";
+import { useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 //components
@@ -9,6 +10,7 @@ import Text from "./UI/BodyText";
 import Colors from "../constants/Colors";
 
 const ImgPicker = (props) => {
+  const loading = useSelector((state) => state.activeJobs.loading1);
   const { onImageTaken, onUploadImage } = props;
   const [pickedImage, setPickedImage] = useState();
 
@@ -19,9 +21,9 @@ const ImgPicker = (props) => {
     );
     if (result.status !== "granted") {
       Alert.alert(
-        "Insufficient permissions!",
-        "You need to grant camera permissions to use this app.",
-        [{ text: "Okay" }]
+        "Permission Error",
+        "Aplikasi memerlukan izin untuk mengakses kamera & file",
+        [{ text: "OK" }]
       );
       return false;
     }
@@ -89,7 +91,9 @@ const ImgPicker = (props) => {
           }}
           onPress={onUploadImage}
         >
-          <Text style={{ color: "#fff" }}>Upload Gambar</Text>
+          <Text style={{ color: "#fff" }}>
+            {loading ? "Uploading..." : "Upload Gambar"}
+          </Text>
         </Button>
       )}
     </View>

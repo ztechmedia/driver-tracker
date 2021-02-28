@@ -4,6 +4,7 @@ import {
   ACTIVE_JOBS_SUCCESS,
   ACTIVE_JOB_SEND_SUCCESS,
   ACTIVE_JOB_SEND_START,
+  ACTIVE_JOB_UPLOAD_SUCCESS,
 } from "../actions/active-jobs";
 
 import { updateObject } from "../../utils/utility";
@@ -63,15 +64,14 @@ const setSuccess = (state, action) => {
 };
 
 const setJobSendSuccess = (state, action) => {
-  const jobIndex = state.activeJobs
-    .map((job) => job.ID === action.job.ID)
-    .indexOf(true);
+  const jobIndex = state.activeJobs.map((job) => job.ID).indexOf(action.job.ID);
 
   const jobs = [...state.activeJobs];
 
   if (
     action.job.AWB_Status === "CANCELED" ||
-    action.job.AWB_Status === "FAILED DELIVERY"
+    action.job.AWB_Status === "FAILED DELIVERY" ||
+    action.job.AWB_Status === "DOCUMENT RECEIVED"
   ) {
     jobs.splice(jobIndex, 1);
   } else {

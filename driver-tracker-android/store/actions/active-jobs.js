@@ -14,12 +14,6 @@ const config = {
   },
 };
 
-const formData = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
-
 export const getActiveJobs = (rider, date) => async (dispatch) => {
   const data = { rider, date };
   try {
@@ -69,7 +63,6 @@ export const uploadPhoto = (awbId, photoURI) => async (dispatch) => {
     const request = await axios.post("/api/v1/upload-document", data, {
       "Content-Type": "multipart/form-data",
     });
-    console.log(request.data.awb);
     dispatch({
       type: ACTIVE_JOB_SEND_SUCCESS,
       job: request.data.awb,

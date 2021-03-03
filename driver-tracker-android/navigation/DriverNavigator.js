@@ -13,6 +13,7 @@ import JobsScreen from "../screens/driver/JobsScreen";
 import ActiveJobScreen from "../screens/driver/ActiveJobScreen";
 import UploadDocumentScreen from "../screens/driver/UploadDocumentScreen";
 import AccountScreen from "../screens/driver/AccountScreen";
+import ImageDetailScreen from "../screens/driver/ImageDetailScreen";
 
 //load constants
 import Colors from "../constants/Colors";
@@ -63,6 +64,8 @@ const ActiveDriverTrackerNavigator = createStackNavigator(
 const AccountNavigator = createStackNavigator(
   {
     AccountScreen: AccountScreen,
+    UploadDocumentScreen: UploadDocumentScreen,
+    ImageDetailScreen: ImageDetailScreen,
   },
   {
     defaultNavigationOptions: defaultNavOptions,

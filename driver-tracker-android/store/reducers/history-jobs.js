@@ -5,6 +5,7 @@ import {
   HISTORY_JOBS_CANCELED_SEND_SUCCESS,
   HISTORY_JOBS_FAILED_SUCCESS,
   HISTORY_JOBS_CANCELED_SUCCESS,
+  HISTORY_JOBS_RECEIVED_SUCCESS,
   HISTORY_JOBS_FAIL,
 } from "../actions/history-jobs";
 
@@ -15,6 +16,7 @@ const initialState = {
   loading1: false,
   jobsFailed: [],
   jobsCanceled: [],
+  jobsReceived: [],
   error: null,
 };
 
@@ -41,6 +43,12 @@ export default (state = initialState, action) => {
         loading: false,
         error: null,
         jobsCanceled: action.jobs,
+      });
+    case HISTORY_JOBS_RECEIVED_SUCCESS:
+      return updateObject(state, {
+        loading: false,
+        error: null,
+        jobsReceived: action.jobs,
       });
     case HISTORY_JOBS_FAILED_SEND_SUCCESS:
       return setJobFailedSendSuccess(state, action);

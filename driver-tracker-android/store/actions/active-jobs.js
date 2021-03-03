@@ -7,6 +7,10 @@ export const ACTIVE_JOB_SEND_START = "ACTIVE_JOB_SEND_START";
 export const ACTIVE_JOB_SEND_SUCCESS = "ACTIVE_JOB_SEND_SUCCESS";
 export const ACTIVE_JOBS_FAIL = "ACTIVE_JOBS_FAIL";
 export const ACTIVE_JOBS_SUCCESS = "ACTIVE_JOBS_SUCCESS";
+export const ACTIVE_UPLOAD_IMAGE_START = "ACTIVE_UPLOAD_IMAGE_START";
+export const ACTIVE_UPLOAD_IMAGE_SUCCESS = "ACTIVE_UPLOAD_IMAGE_SUCCESS";
+export const ACTIVE_UPLOAD_IMAGE_SUCCESS_ACCOUNT =
+  "ACTIVE_UPLOAD_IMAGE_SUCCESS_ACCOUNT";
 
 const config = {
   headers: {
@@ -33,9 +37,13 @@ export const jobActiveSendStatus = (id, status) => async (dispatch) => {
   };
 
   try {
-    dispatch({
-      type: ACTIVE_JOB_SEND_START,
-    });
+    status === "CANCELED" || status === "FAILED DELIVERY"
+      ? dispatch({
+          type: ACTIVE_UPLOAD_IMAGE_START,
+        })
+      : dispatch({
+          type: ACTIVE_JOB_SEND_START,
+        });
     const request = await axios.post("/api/v1/job-send-status", data, config);
     dispatch({
       type: ACTIVE_JOB_SEND_SUCCESS,
@@ -47,7 +55,9 @@ export const jobActiveSendStatus = (id, status) => async (dispatch) => {
   }
 };
 
-export const uploadPhoto = (awbId, photoURI) => async (dispatch) => {
+export const uploadPhoto = (awbId, photoURI, position = null) => async (
+  dispatch
+) => {
   const data = new FormData();
   data.append("awbId", awbId);
   data.append("photo", {
@@ -58,16 +68,23 @@ export const uploadPhoto = (awbId, photoURI) => async (dispatch) => {
 
   try {
     dispatch({
-      type: ACTIVE_JOB_SEND_START,
+      type: ACTIVE_UPLOAD_IMAGE_START,
     });
     const request = await axios.post("/api/v1/upload-document", data, {
       "Content-Type": "multipart/form-data",
     });
-    dispatch({
-      type: ACTIVE_JOB_SEND_SUCCESS,
-      job: request.data.awb,
-    });
-    NavigationServices.navigate("ActiveJobScreen");
+
+    if (position === "account") {
+      dispatch({
+        type: ACTIVE_UPLOAD_IMAGE_SUCCESS_ACCOUNT,
+      });
+    } else {
+      dispatch({
+        type: ACTIVE_UPLOAD_IMAGE_SUCCESS,
+        job: request.data.awb,
+      });
+    }
+    NavigationServices.goBack();
   } catch (err) {
     dispatch(activeJobsFail(err.response.data.error));
     dispatch(errorHandler(err.response.data.error));

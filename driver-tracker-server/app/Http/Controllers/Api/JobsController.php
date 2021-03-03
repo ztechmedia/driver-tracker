@@ -36,7 +36,7 @@ class JobsController extends Controller
     {
         $date = date('Y-m-d', strtotime($request->date));
         $jobs = Awb::where('Rider', $request->rider)
-            ->whereIn('AWB_Status', ['PROCESSED2', 'PROCESSED', "DELIVERY"])
+            ->whereIn('AWB_Status', ['PROCESSED2', 'PROCESSED', "MUAT BARANG", "SELESAI MUAT"])
             ->where('AWB_Date', $date)
             ->get();
         $awb = count($jobs) > 0 ? AwbResource::collection($jobs) : [];
@@ -50,7 +50,7 @@ class JobsController extends Controller
     {
         $date = date('Y-m-d', strtotime($request->date));
         $jobs = Awb::where('Rider', $request->rider)
-            ->whereIn('AWB_Status', ["DELIVERY", "RECEIVED"])
+            ->whereIn('AWB_Status', ["MUAT BARANG", "SELESAI MUAT", "DELIVERY", "BONGKAR BARANG", "SELESAI BONGKAR", "RECEIVED"])
             ->where('AWB_Date', $date)
             ->get();
         $awb = count($jobs) > 0 ? AwbResource::collection($jobs) : [];
@@ -79,6 +79,21 @@ class JobsController extends Controller
     {
         $jobs = Awb::where('Rider', $request->rider)
             ->whereIn('AWB_Status', ["CANCELED"])
+            ->whereYear('AWB_Date', $request->year)
+            ->whereMonth('AWB_Date', $request->month)
+            ->get();
+
+        $awb = count($jobs) > 0 ? AwbResource::collection($jobs) : [];
+        return response()->json([
+            'jobs' => $awb,
+        ]);
+    }
+
+    //get received shipping
+    public function getReceivedJobs(Request $request)
+    {
+        $jobs = Awb::where('Rider', $request->rider)
+            ->whereIn('AWB_Status', ["DOCUMENT RECEIVED"])
             ->whereYear('AWB_Date', $request->year)
             ->whereMonth('AWB_Date', $request->month)
             ->get();

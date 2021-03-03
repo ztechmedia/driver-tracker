@@ -32,7 +32,7 @@ const JobsScreen = () => {
   const loading1 = useSelector((state) => state.jobs.loading1);
   const jobsToday = useSelector((state) => state.jobs.jobsToday);
   const jobsAttemp = useSelector((state) => state.jobs.jobsAttemp);
-  const [tabPostion, setTabPosition] = useState("daily");
+  const [tabPostion, setTabPosition] = useState(0);
   const [day, setDay] = useState(new Date("2016-09-13").getDate());
   const [month, setMonth] = useState(new Date("2016-09-13").getMonth() + 1);
   const [year, setYear] = useState(new Date("2016-09-13").getFullYear());
@@ -55,12 +55,12 @@ const JobsScreen = () => {
     onFetchJobsDay();
   };
 
-  const onChangeTabHandler = () => {
-    if (tabPostion === "daily") {
-      setTabPosition("attemp");
-      onFetchJobsAttemp();
+  const onChangeTabHandler = (i) => {
+    setTabPosition(i);
+    if (i === 0) {
+      onFetchJobsDay();
     } else {
-      setTabPosition("daily");
+      onFetchJobsAttemp();
     }
   };
 
@@ -79,8 +79,7 @@ const JobsScreen = () => {
   }, [dispatch, year, month, day]);
 
   const onStartOrderHandler = (id) => {
-    const job = tabPostion === "daily" ? "today" : "attemp";
-    const date = job === "attemp" ? `${year}-${month}-${day}` : null;
+    const date = tabPostion === 1 ? `${year}-${month}-${day}` : null;
     Alert.alert(
       "Mulai Pengiriman",
       "Apakah anda yakin akan memulai pengiriman ?",
@@ -91,7 +90,8 @@ const JobsScreen = () => {
         },
         {
           text: "Mulai",
-          onPress: () => dispatch(jobSendStatus(id, "DELIVERY", job, date)),
+          onPress: () =>
+            dispatch(jobSendStatus(id, "MUAT BARANG", tabPostion, date)),
         },
       ]
     );
@@ -202,7 +202,7 @@ const JobsScreen = () => {
           <View style={styles.tabContainer}>
             <Tabs
               tabBarUnderlineStyle={styles.tabUnderline}
-              onChangeTab={onChangeTabHandler}
+              onChangeTab={({ i }) => onChangeTabHandler(i)}
             >
               <Tab
                 textStyle={styles.textStyle}

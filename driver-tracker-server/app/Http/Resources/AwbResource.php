@@ -18,6 +18,7 @@ class AwbResource extends JsonResource
             'Consignee_Addr' => $this->Consignee_Addr,
             'AWB_Status' => $this->AWB_Status,
             'AWB_Date' => revDate($this->AWB_Date),
+            'AWB_Img' => $this->AWB_Img,
         ];
     }
 }

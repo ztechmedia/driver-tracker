@@ -22,6 +22,7 @@ Route::group([
     Route::post('jobs-active', 'Api\JobsController@getJobsActive');
     Route::post('jobs-failed', 'Api\JobsController@getFailedJobs');
     Route::post('jobs-canceled', 'Api\JobsController@getCanceledJobs');
+    Route::post('jobs-received', 'Api\JobsController@getReceivedJobs');
     Route::post('job-send-status', 'Api\JobsController@setJobStatus');
     Route::post('job-send-status-activation', 'Api\JobsController@setJobStatusActivation');
     Route::post('upload-document', 'Api\JobsController@uploadDocument');

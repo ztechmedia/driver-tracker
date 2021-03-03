@@ -50,13 +50,12 @@ const ImgPicker = (props) => {
       <View
         style={{
           width: "100%",
-          height: 200,
+          height: 330,
           marginBottom: 15,
           justifyContent: "center",
           alignItems: "center",
           borderWidth: 1,
           borderColor: Colors.primary,
-          borderRadius: 20,
         }}
       >
         {!pickedImage ? (
@@ -72,13 +71,11 @@ const ImgPicker = (props) => {
         full
         rounded
         style={{
-          backgroundColor: "#fff",
-          borderWidth: 1,
-          borderColor: Colors.primary,
+          backgroundColor: Colors.primary,
         }}
         onPress={takeImageHandler}
       >
-        <Text style={{ color: Colors.primary }}>Ambil Gambar</Text>
+        <Text style={{ color: "#fff" }}>Ambil Gambar</Text>
       </Button>
 
       {pickedImage && (
@@ -86,7 +83,7 @@ const ImgPicker = (props) => {
           full
           rounded
           style={{
-            backgroundColor: Colors.primary,
+            backgroundColor: "orange",
             marginTop: 15,
           }}
           onPress={onUploadImage}

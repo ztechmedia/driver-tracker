@@ -26,6 +26,7 @@ import { logout } from "../../store/actions/auth";
 import {
   getFailedJobs,
   getCanceledJobs,
+  getReceivedJobs,
   activateJob,
 } from "../../store/actions/history-jobs";
 //constants
@@ -36,14 +37,15 @@ import Text from "../../components/UI/BodyText";
 import DatePicker from "../../components/DatePicker";
 import JobList from "../../components/JobList";
 
-const AccountScreen = () => {
+const AccountScreen = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.userLogged);
   const loading = useSelector((state) => state.historyJobs.loading);
   const loading1 = useSelector((state) => state.historyJobs.loading1);
   const jobsFailed = useSelector((state) => state.historyJobs.jobsFailed);
   const jobsCanceled = useSelector((state) => state.historyJobs.jobsCanceled);
-  const [tabJobPostion, setTabJobPosition] = useState("failed");
+  const jobsReceived = useSelector((state) => state.historyJobs.jobsReceived);
+  const [tabJobPostion, setTabJobPosition] = useState();
   const [tabActive, setTabactive] = useState("profile");
   const [month, setMonth] = useState(new Date("2016-09-13").getMonth() + 1);
   const [year, setYear] = useState(new Date("2016-09-13").getFullYear());
@@ -60,17 +62,18 @@ const AccountScreen = () => {
     dispatch(logout());
   }, [dispatch]);
 
-  const onChangeTabHandler = () => {
-    if (tabJobPostion === "failed") {
-      setTabJobPosition("canceled");
+  const onChangeTabHandler = (i) => {
+    setTabJobPosition(i);
+    if (i === 0) {
+      onFetchJobsFailedHandler();
+    } else if (i === 1) {
       onFetchJobsCanceledHandler();
-    } else {
-      setTabJobPosition("canceled");
+    } else if (i === 2) {
+      onFetchJobsReceivedHandler();
     }
   };
 
   const onActivateHandler = (id) => {
-    const job = tabJobPostion === "failed" ? "failed" : "canceled";
     Alert.alert(
       "Mulai Pengiriman",
       "Apakah anda yakin akan mengaktifkan kembali pengiriman ini?, jika di aktifkan maka pengiriman akan langsung masuk ke Tab Pengiriman Ulang ?",
@@ -81,7 +84,8 @@ const AccountScreen = () => {
         },
         {
           text: "Mulai",
-          onPress: () => dispatch(activateJob(id, "ATTEMP DELIVERY", job)),
+          onPress: () =>
+            dispatch(activateJob(id, "ATTEMP DELIVERY", tabJobPostion)),
         },
       ]
     );
@@ -98,6 +102,24 @@ const AccountScreen = () => {
       dispatch(getCanceledJobs(user.Rider_Name, year, month));
     }
   }, [dispatch, year, month]);
+
+  const onFetchJobsReceivedHandler = useCallback(() => {
+    if (user) {
+      dispatch(getReceivedJobs(user.Rider_Name, year, month));
+    }
+  }, [dispatch, year, month]);
+
+  const reuploadDocumentHandler = (awbId) => {
+    props.navigation.navigate("UploadDocumentScreen", {
+      awbId: awbId,
+      position: "account",
+    });
+  };
+
+  const imageDetailHandler = (imgUrl, awbNo) => {
+    console.log(imgUrl);
+    props.navigation.navigate("ImageDetailScreen", { imgUrl, awbNo });
+  };
 
   useEffect(() => {
     if ((year, month)) {
@@ -168,6 +190,41 @@ const AccountScreen = () => {
         }
       >
         <Text>Tidak ada pengiriman dibatalkan bulan ini</Text>
+      </ScrollView>
+    );
+
+  let jobsReceivedList =
+    jobsReceived.length > 0 && !loading ? (
+      <View style={styles.tabBodyContainer}>
+        <FlatList
+          onRefresh={onFetchJobsCanceledHandler}
+          refreshing={loading}
+          data={jobsReceived}
+          keyExtractor={(item) => item.ID + "awb1"}
+          key="awb1"
+          renderItem={(itemData) => (
+            <JobList
+              idleText="Aktifkan Kembali"
+              loading={loading1}
+              onStartOrder={onActivateHandler}
+              awb={itemData.item}
+              onReuploadDocument={reuploadDocumentHandler}
+              onImageDetail={imageDetailHandler}
+            />
+          )}
+        />
+      </View>
+    ) : (
+      <ScrollView
+        contentContainerStyle={styles.centered}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={onFetchJobsReceivedHandler}
+          />
+        }
+      >
+        <Text>Tidak ada pengiriman selesai bulan ini</Text>
       </ScrollView>
     );
 
@@ -300,7 +357,7 @@ const AccountScreen = () => {
               <View style={{ height: "100%" }}>
                 <Tabs
                   tabBarUnderlineStyle={styles.tabUnderline}
-                  onChangeTab={onChangeTabHandler}
+                  onChangeTab={({ i }) => onChangeTabHandler(i)}
                 >
                   <Tab
                     textStyle={styles.textStyle}
@@ -344,6 +401,28 @@ const AccountScreen = () => {
                       </View>
                     ) : (
                       jobsCanceledList
+                    )}
+                  </Tab>
+                  <Tab
+                    textStyle={styles.textStyle}
+                    activeTextStyle={styles.textStyleActive}
+                    activeTabStyle={styles.tabStyleActive}
+                    tabStyle={styles.tabStyle}
+                    heading="Selesai"
+                  >
+                    {loading ? (
+                      <View style={styles.tabBodyContainer}>
+                        <View
+                          style={{ height: "100%", justifyContent: "center" }}
+                        >
+                          <ActivityIndicator
+                            size="large"
+                            color={Colors.primary}
+                          />
+                        </View>
+                      </View>
+                    ) : (
+                      jobsReceivedList
                     )}
                   </Tab>
                 </Tabs>

@@ -153,18 +153,7 @@ const ActiveJobScreen = (props) => {
                   </ListItem>
                   <ListItem>
                     <Text>
-                      {job.AWB_No} (Status:{" "}
-                      <Text
-                        bold
-                        style={
-                          job.AWB_Status === "FAILED DELIVERY"
-                            ? { color: "red" }
-                            : null
-                        }
-                      >
-                        {job.AWB_Status}
-                      </Text>
-                      )
+                      {job.AWB_No} (Status: <Text bold>{job.AWB_Status}</Text>)
                     </Text>
                   </ListItem>
                   <ListItem itemDivider>
@@ -232,15 +221,13 @@ const ActiveJobScreen = (props) => {
                     full
                     rounded
                     style={{
-                      backgroundColor: "#fff",
-                      borderWidth: 1,
-                      borderColor: "#ccc",
+                      backgroundColor: Colors.primary,
                     }}
                     onPress={() => onChangeAwbId(job.ID)}
                   >
                     <Text
                       style={{
-                        color: Colors.primary,
+                        color: "#fff",
                         textTransform: "uppercase",
                         fontWeight: "bold",
                       }}
@@ -319,7 +306,7 @@ const ActiveJobScreen = (props) => {
         {show && (
           <View
             style={{
-              height: height * 0.52,
+              height: height * 0.7,
               width: "100%",
               backgroundColor: "#fff",
               borderTopLeftRadius: 20,
@@ -345,6 +332,58 @@ const ActiveJobScreen = (props) => {
             </View>
             <ScrollView>
               <List>
+                <ListItem
+                  icon
+                  onPress={() => onChangeStatusHandler("SELESAI MUAT")}
+                >
+                  <Left>
+                    <Button style={{ backgroundColor: Colors.primary }}>
+                      <Icon active name="cube-outline" />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Text>SELESAI MUAT</Text>
+                  </Body>
+                </ListItem>
+                <ListItem
+                  icon
+                  onPress={() => onChangeStatusHandler("DELIVERY")}
+                >
+                  <Left>
+                    <Button style={{ backgroundColor: Colors.primary }}>
+                      <Icon active name="car-sport-outline" />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Text>DELIVERY</Text>
+                  </Body>
+                </ListItem>
+                <ListItem
+                  icon
+                  onPress={() => onChangeStatusHandler("BONGKAR BARANG")}
+                >
+                  <Left>
+                    <Button style={{ backgroundColor: Colors.primary }}>
+                      <Icon active name="logo-dropbox" />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Text>BONGKAR BARANG</Text>
+                  </Body>
+                </ListItem>
+                <ListItem
+                  icon
+                  onPress={() => onChangeStatusHandler("SELESAI BONGKAR")}
+                >
+                  <Left>
+                    <Button style={{ backgroundColor: Colors.primary }}>
+                      <Icon active name="logo-xbox" />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Text>SELESAI BONGKAR</Text>
+                  </Body>
+                </ListItem>
                 <ListItem
                   icon
                   onPress={() => onChangeStatusHandler("RECEIVED")}

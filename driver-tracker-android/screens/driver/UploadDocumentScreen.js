@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { View } from "react-native";
 import { Container, Content } from "native-base";
@@ -15,10 +15,11 @@ const UploadDocumentScreen = (props) => {
     setSelectedImage(imgPath);
   };
 
-  const uploadImageHandler = () => {
+  const uploadImageHandler = useCallback(() => {
     const awbId = navigation.getParam("awbId");
-    dispatch(uploadPhoto(awbId, selectedImage));
-  };
+    const position = navigation.getParam("position");
+    dispatch(uploadPhoto(awbId, selectedImage, position));
+  }, [selectedImage]);
 
   return (
     <Container>

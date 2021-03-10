@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { LogBox } from "react-native";
+import Constants from "expo-constants";
+import { LogBox, View, Platform } from "react-native";
 import { Provider } from "react-redux";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
@@ -46,7 +47,15 @@ export default function App(props) {
     <Root>
       <StyleProvider style={theme()}>
         <Provider store={store}>
-          <NavigationContainer />
+          <View
+            style={{
+              flex: 1,
+              paddingTop:
+                Platform.OS === "android" ? Constants.statusBarHeight : 0,
+            }}
+          >
+            <NavigationContainer />
+          </View>
         </Provider>
       </StyleProvider>
     </Root>

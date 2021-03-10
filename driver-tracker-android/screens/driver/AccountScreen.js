@@ -47,8 +47,8 @@ const AccountScreen = (props) => {
   const jobsReceived = useSelector((state) => state.historyJobs.jobsReceived);
   const [tabJobPostion, setTabJobPosition] = useState();
   const [tabActive, setTabactive] = useState("profile");
-  const [month, setMonth] = useState(new Date("2016-09-13").getMonth() + 1);
-  const [year, setYear] = useState(new Date("2016-09-13").getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const onChangeMonthHandler = (value) => {
     setMonth(value);

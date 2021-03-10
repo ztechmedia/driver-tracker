@@ -96,11 +96,17 @@ const JobList = (props) => {
           {AWB_Status === "DOCUMENT RECEIVED" ? (
             <TouchableHighlight
               onPress={() =>
-                props.onImageDetail(`${config.publicImgURL}${AWB_Img}`, AWB_No)
+                props.onImageDetail(
+                  `${config.publicImgURL}${AWB_Img}?${Date.now()}`,
+                  AWB_No
+                )
               }
             >
               <Image
-                source={{ uri: `${config.publicImgURL}${AWB_Img}` }}
+                key={Date.now()}
+                source={{
+                  uri: `${config.publicImgURL}${AWB_Img}?${Date.now()}`,
+                }}
                 style={{
                   width: 90,
                   height: 120,

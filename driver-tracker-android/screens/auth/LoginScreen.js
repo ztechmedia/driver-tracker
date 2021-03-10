@@ -8,6 +8,7 @@ import { login } from "../../store/actions/auth";
 //components
 import Input from "../../components/UI/InputGenerator";
 import Text from "../../components/UI/BodyText";
+import GeneralStatusBarColor from "../../components/UI/statusbar/GeneralStatusBarColor";
 //reducers
 import { FORM_UPDATE, formReducer } from "../../utils/formReducer";
 //constants
@@ -64,6 +65,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <Container>
       <Content contentContainerStyle={styles.content}>
+        <GeneralStatusBarColor backgroundColor={Colors.primary} />
         <View style={styles.header}>
           <Text style={styles.textHeader}>Welcome!</Text>
         </View>

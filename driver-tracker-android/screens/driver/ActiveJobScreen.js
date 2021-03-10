@@ -51,9 +51,9 @@ const ActiveJobScreen = (props) => {
   const activeJobs = useSelector((state) => state.activeJobs.activeJobs);
   const [awbId, setAwbId] = useState(null);
   const [show, setShow] = useState(false);
-  const [day, setDay] = useState(new Date("2016-09-13").getDate());
-  const [month, setMonth] = useState(new Date("2016-09-13").getMonth() + 1);
-  const [year, setYear] = useState(new Date("2016-09-13").getFullYear());
+  const [day, setDay] = useState(new Date().getDate());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const onChangeDateHandler = (value) => {
     setDay(value);

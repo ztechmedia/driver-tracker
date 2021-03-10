@@ -33,9 +33,9 @@ const JobsScreen = () => {
   const jobsToday = useSelector((state) => state.jobs.jobsToday);
   const jobsAttemp = useSelector((state) => state.jobs.jobsAttemp);
   const [tabPostion, setTabPosition] = useState(0);
-  const [day, setDay] = useState(new Date("2016-09-13").getDate());
-  const [month, setMonth] = useState(new Date("2016-09-13").getMonth() + 1);
-  const [year, setYear] = useState(new Date("2016-09-13").getFullYear());
+  const [day, setDay] = useState(new Date().getDate());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const onChangeDateHandler = (value) => {
     setDay(value);

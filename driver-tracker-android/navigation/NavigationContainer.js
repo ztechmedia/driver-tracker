@@ -25,7 +25,6 @@ const NavigationContainer = (props) => {
       );
     }
   }, [isAuth]);
-
   return <DriverNavigator ref={navRef} />;
 };
 

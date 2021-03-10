@@ -38,16 +38,11 @@ export const login = (phone, password) => async (dispatch) => {
   try {
     dispatch(authStart());
     const request = await axios.post("/api/v1/auth/login", data, config);
-    const expirationDate = new Date(
-      new Date().getTime() + request.data.expiresIn * 1000
-    );
     await saveDataToStorage("userData", {
       token: request.data.token,
-      expirationDate: expirationDate,
       userLogged: request.data.user,
     });
     dispatch(authSuccess(request.data.token, request.data.user));
-    // dispatch(authTimeout(request.data.expiresIn));
     axios.defaults.headers.common[
       "authorization"
     ] = `Bearer ${request.data.token}`;
@@ -110,32 +105,17 @@ export const authCheckState = () => async (dispatch) => {
   if (!userData) {
     dispatch(logout());
   } else {
-    const { token, userLogged, expirationDate } = userData;
-    const newExpirationDate = new Date(expirationDate);
-
-    if (newExpirationDate >= new Date()) {
-      axios.defaults.headers.common["authorization"] = `Bearer ${token}`;
-      // dispatch(authTimeout(newExpirationDate.getTime() - new Date().getTime()));
-      dispatch(authSuccess(token, userLogged));
-      NavigationServices.navigate("DriverTracker");
-    } else {
-      dispatch(logout());
-    }
+    const { token, userLogged } = userData;
+    axios.defaults.headers.common["authorization"] = `Bearer ${token}`;
+    dispatch(authSuccess(token, userLogged));
+    NavigationServices.navigate("DriverTracker");
   }
 };
-
-//auto logout feature when auth time out was achieved
-// const authTimeout = (expirationTime) => (dispatch) => {
-//   timer = setTimeout(() => {
-//     dispatch(logout());
-//   }, expirationTime * 1000);
-// };
 
 //logout
 export const logout = () => async (dispatch) => {
   delete axios.defaults.headers.common["authorization"];
   await removeDataFromStorage("userData");
-  // clearTimeout(timer);
   dispatch({
     type: AUTH_LOGOUT,
   });
